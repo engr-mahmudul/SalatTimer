@@ -27,8 +27,8 @@ const SearchingLayout= () => {
 
     const startRippleAnimation = () => {
         scaleValue.value = withRepeat(withTiming(3, { duration: 1000 }), -1);
-        opacityValue.value = withRepeat(withTiming(0, { duration: 1000 }), -1);
-        textScaleValue.value = withRepeat(withTiming(1, { duration: 1000 }), -1);
+        opacityValue.value = withRepeat(withTiming(0, { duration: 1500 }), -1);
+        textScaleValue.value = withRepeat(withTiming(1, { duration: 1500 }), -1);
     };
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const SearchingLayout= () => {
             <View style={[styles.circle]}>
                 <Animated.View style={[animatedCircle, styles.innerCircle]}>
                 </Animated.View>
-                <Animated.Text style={[animatedTextStyle, styles.innerText]}>Scanning</Animated.Text>
+                <Animated.Text style={[animatedTextStyle, styles.innerText]}>Searching</Animated.Text>
             </View>
         </View>
     )
