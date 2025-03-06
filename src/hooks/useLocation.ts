@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import GetLocation from 'react-native-get-location';
 
-const useLocation = ({setSearching}) => {
+const useLocation = (setSearching: (searching: boolean) => void) => {
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
  
 
