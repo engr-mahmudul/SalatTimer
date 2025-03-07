@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import SearchingLayout from '../components/SearchingLayout';
 
 const SearchingScreen = () => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#0000ff" />
-      <Text style={styles.text}>Searching for Location...</Text>
+      <SearchingLayout />
     </View>
   );
 };

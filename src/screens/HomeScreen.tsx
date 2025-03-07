@@ -1,20 +1,47 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import useLocation from '../hooks/useLocation';
 import usePrayerTimes from '../hooks/usePrayerTimes';
 
 const HomeScreen = ({setSearching}) => {
-  const { location, fetchLocation } = useLocation(setSearching);
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const {currentLocation, fetchLocation} = useLocation(setSearching);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
-  
+
   const prayerTimes = usePrayerTimes(latitude, longitude);
 
+  // Update `location` when `currentLocation` changes
+  useEffect(() => {
+    if (currentLocation) {
+      setLocation(currentLocation);
+    }
+  }, [currentLocation]);
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
   const setCoordinates = () => {
     if (location) {
       setLatitude(location.latitude);
       setLongitude(location.longitude);
-      console.log('Latitude:', location.latitude, 'Longitude:', location.longitude);
+      console.log(
+        'Latitude:',
+        location.latitude,
+        'Longitude:',
+        location.longitude,
+      );
     }
   };
 
@@ -26,7 +53,9 @@ const HomeScreen = ({setSearching}) => {
             Latitude: {location.latitude}, Longitude: {location.longitude}
           </Text>
         ) : (
-          <Text style={styles.locationText}>Press the button to get location</Text>
+          <Text style={styles.locationText}>
+            Press the button to get location
+          </Text>
         )}
       </View>
       <Button title="Get Location" onPress={fetchLocation} />
