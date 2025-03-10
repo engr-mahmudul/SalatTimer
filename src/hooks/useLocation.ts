@@ -3,10 +3,13 @@ import GetLocation from 'react-native-get-location';
 
 type LocationType = {latitude: number; longitude: number} | null;
 
-const useLocation = (setSearching: (searching: boolean) => void) => {
-  const [currentLocation, setCurrentLocation] = useState<LocationType>(null);
-
+const useLocation = (
+  setSearching: (searching: boolean) => void,
+  setCurrentLocation: (location: LocationType) => void,
+) => {
+  const [newLocation, setNewLocation] = useState({});
   const fetchLocation = async () => {
+    console.log(' Fetch Location is called..!');
     setSearching(true);
     try {
       const loc = await GetLocation.getCurrentPosition({
@@ -14,6 +17,7 @@ const useLocation = (setSearching: (searching: boolean) => void) => {
         timeout: 60000,
       });
       console.log('Fetched Location:', loc);
+      setNewLocation(loc);
       setCurrentLocation({latitude: loc.latitude, longitude: loc.longitude});
     } catch (error) {
       console.warn('Error fetching location:', error.message);
@@ -21,7 +25,7 @@ const useLocation = (setSearching: (searching: boolean) => void) => {
     setSearching(false);
   };
 
-  return {currentLocation, fetchLocation};
+  return {newLocation, fetchLocation};
 };
 
 export default useLocation;

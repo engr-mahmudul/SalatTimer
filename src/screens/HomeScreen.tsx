@@ -10,37 +10,41 @@ import {
 } from 'react-native';
 import useLocation from '../hooks/useLocation';
 import usePrayerTimes from '../hooks/usePrayerTimes';
+import {fetchLocation} from '../utils/locationFetching';
+
+type LocationType = {latitude: number; longitude: number} | null;
 
 const HomeScreen = ({setSearching}) => {
-  const [location, setLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
-  const {currentLocation, fetchLocation} = useLocation(setSearching);
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<LocationType>(null);
+  const [latitude, setLatitude] = useState({});
+  const [longitude, setLongitude] = useState(null);
+  // const {newLocation, fetchLocation} = useLocation(
+  //   setSearching,
+  //   setCurrentLocation,
+  // );
 
   const prayerTimes = usePrayerTimes(latitude, longitude);
-
-  // Update `location` when `currentLocation` changes
-  useEffect(() => {
-    if (currentLocation) {
-      setLocation(currentLocation);
-    }
-  }, [currentLocation]);
-
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
-  const setCoordinates = () => {
+  const fetchLocation2 = async () => {
+    const location = await fetchLocation(setSearching);
     if (location) {
-      setLatitude(location.latitude);
-      setLongitude(location.longitude);
+      console.log('From Button Handler Function', location);
+      setLatitude(location);
+    }
+  };
+
+  useEffect(() => {
+    console.log('From Home Screen Current Location:', latitude);
+  }, [latitude]);
+
+  const setCoordinates = () => {
+    if (currentLocation) {
+      setLatitude(currentLocation.latitude);
+      setLongitude(currentLocation.longitude);
       console.log(
         'Latitude:',
-        location.latitude,
+        currentLocation.latitude,
         'Longitude:',
-        location.longitude,
+        currentLocation.longitude,
       );
     }
   };
@@ -48,9 +52,10 @@ const HomeScreen = ({setSearching}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        {location ? (
+        {currentLocation ? (
           <Text style={styles.locationText}>
-            Latitude: {location.latitude}, Longitude: {location.longitude}
+            Latitude: {currentLocation.latitude}, Longitude:{' '}
+            {currentLocation.longitude}
           </Text>
         ) : (
           <Text style={styles.locationText}>
@@ -58,7 +63,9 @@ const HomeScreen = ({setSearching}) => {
           </Text>
         )}
       </View>
-      <Button title="Get Location" onPress={fetchLocation} />
+      <View style={styles.buttonStyle}>
+        <Button title="Get Location" onPress={fetchLocation2} />
+      </View>
       <Button title="Fetch Prayer Times" onPress={setCoordinates} />
     </SafeAreaView>
   );
@@ -76,5 +83,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginTop: 10,
+  },
+  buttonStyle: {
+    padding: 10,
   },
 });
