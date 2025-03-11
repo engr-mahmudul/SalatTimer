@@ -3,6 +3,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from './src/screens/HomeScreen';
 import SearchingScreen from './src/screens/SearchingScreen';
+import {Provider} from 'react-redux';
+import store from './src/reduxStore/store';
 
 const Stack = createStackNavigator();
 
@@ -13,17 +15,19 @@ const App = () => {
     console.log(searching);
   }, [searching]);
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        {searching ? (
-          <Stack.Screen name="Searching" component={SearchingScreen} />
-        ) : (
-          <Stack.Screen name="Home">
-            {() => <HomeScreen setSearching={setSearching} />}
-          </Stack.Screen>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          {searching ? (
+            <Stack.Screen name="Searching" component={SearchingScreen} />
+          ) : (
+            <Stack.Screen name="Home">
+              {() => <HomeScreen setSearching={setSearching} />}
+            </Stack.Screen>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 

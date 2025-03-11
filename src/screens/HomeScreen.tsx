@@ -11,19 +11,17 @@ import {
 import useLocation from '../hooks/useLocation';
 import usePrayerTimes from '../hooks/usePrayerTimes';
 import {fetchLocation} from '../utils/locationFetching';
+import {useDispatch, useSelector} from 'react-redux';
 
 type LocationType = {latitude: number; longitude: number} | null;
 
 const HomeScreen = ({setSearching}) => {
-  const [currentLocation, setCurrentLocation] = useState<LocationType>(null);
-  const [latitude, setLatitude] = useState({});
-  const [longitude, setLongitude] = useState(null);
-  // const {newLocation, fetchLocation} = useLocation(
-  //   setSearching,
-  //   setCurrentLocation,
-  // );
+  const location = useSelector(state => state.location);
+  const dispatch = useDispatch();
 
-  const prayerTimes = usePrayerTimes(latitude, longitude);
+  const {newLocation, fetchLocation} = useLocation(setSearching, dispatch);
+
+  // const prayerTimes = usePrayerTimes(latitude, longitude);
   const fetchLocation2 = async () => {
     const location = await fetchLocation(setSearching);
     if (location) {
@@ -33,18 +31,18 @@ const HomeScreen = ({setSearching}) => {
   };
 
   useEffect(() => {
-    console.log('From Home Screen Current Location:', latitude);
-  }, [latitude]);
+    console.log('From Home Screen Current Location:', location);
+  }, [location]);
 
   const setCoordinates = () => {
-    if (currentLocation) {
-      setLatitude(currentLocation.latitude);
-      setLongitude(currentLocation.longitude);
+    if (location) {
+      setLatitude(location.latitude);
+      setLongitude(location.longitude);
       console.log(
         'Latitude:',
-        currentLocation.latitude,
+        location.latitude,
         'Longitude:',
-        currentLocation.longitude,
+        location.longitude,
       );
     }
   };
@@ -52,10 +50,9 @@ const HomeScreen = ({setSearching}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        {currentLocation ? (
+        {location ? (
           <Text style={styles.locationText}>
-            Latitude: {currentLocation.latitude}, Longitude:{' '}
-            {currentLocation.longitude}
+            Latitude: {location.latitude}, Longitude: {location.longitude}
           </Text>
         ) : (
           <Text style={styles.locationText}>
@@ -64,7 +61,7 @@ const HomeScreen = ({setSearching}) => {
         )}
       </View>
       <View style={styles.buttonStyle}>
-        <Button title="Get Location" onPress={fetchLocation2} />
+        <Button title="Get Location" onPress={fetchLocation} />
       </View>
       <Button title="Fetch Prayer Times" onPress={setCoordinates} />
     </SafeAreaView>
