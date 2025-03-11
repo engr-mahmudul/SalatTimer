@@ -9,26 +9,23 @@ import {
   StatusBar,
 } from 'react-native';
 import useLocation from '../hooks/useLocation';
-import usePrayerTimes from '../hooks/usePrayerTimes';
-import {fetchLocation} from '../utils/locationFetching';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 type LocationType = {latitude: number; longitude: number} | null;
 
-const HomeScreen = ({setSearching}) => {
+const HomeScreen = () => {
   const location = useSelector(state => state.location);
-  const dispatch = useDispatch();
 
-  const {newLocation, fetchLocation} = useLocation(setSearching, dispatch);
+  const {fetchLocation} = useLocation();
 
   // const prayerTimes = usePrayerTimes(latitude, longitude);
-  const fetchLocation2 = async () => {
-    const location = await fetchLocation(setSearching);
-    if (location) {
-      console.log('From Button Handler Function', location);
-      setLatitude(location);
-    }
-  };
+  // const fetchLocation2 = async () => {
+  //   const location = await fetchLocation(setSearching);
+  //   if (location) {
+  //     console.log('From Button Handler Function', location);
+  //     setLatitude(location);
+  //   }
+  // };
 
   useEffect(() => {
     console.log('From Home Screen Current Location:', location);
@@ -36,8 +33,8 @@ const HomeScreen = ({setSearching}) => {
 
   const setCoordinates = () => {
     if (location) {
-      setLatitude(location.latitude);
-      setLongitude(location.longitude);
+      // setLatitude(location.latitude);
+      // setLongitude(location.longitude);
       console.log(
         'Latitude:',
         location.latitude,
